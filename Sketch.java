@@ -12,6 +12,7 @@ public class Sketch extends PApplet {
   PImage imgTarget;
   PImage imgCrossHair;
   PImage imgBackground;
+  PImage imgSpace;
   int sheepX = 0;
   int sheepY = 0;
   boolean blnMouseClick = false;
@@ -31,6 +32,8 @@ public class Sketch extends PApplet {
   public void setup() {
     frameRate(144);
     imgBackground = loadImage("MenuBackground.jpg");
+
+    imgSpace = loadImage("Space.jpg");
     
     imgForest = loadImage("ForestBackground.jpg");
     imgForest.resize(1600,900);
@@ -55,6 +58,9 @@ public class Sketch extends PApplet {
     image(imgForest, 0, 0);
   }
 
+  public void levelTwo() {
+    image(imgSpace, 0, 0);
+  }
   public void mousePressed() {
     if (mouseX > 600 && mouseX < 1000 && mouseY > 350 && mouseY < 425) {
       blnMouseClick = true;
