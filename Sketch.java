@@ -1,14 +1,27 @@
 import processing.core.PApplet;
+import processing.core.PImage; 
+/**
+ * Description: 
+ * @author: B. Zhang & L. Pei
+ */
 
 public class Sketch extends PApplet {
-	
-	
+	// global variables
+  PImage imgForest;
+  PImage imgSheep;
+  PImage imgTarget;
+  PImage imgCrossHair;
+  PImage imgBackground;
+  int sheepX = 0;
+  int sheepY = 0;
+  boolean blnMouseClick = false;
+
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
 	// put your size call here
-    size(400, 400);
+    size(1600, 900);
   }
 
   /** 
@@ -16,21 +29,35 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
-    background(210, 255, 173);
+    frameRate(144);
+    imgBackground = loadImage("MenuBackground.jpg");
+    
+    imgForest = loadImage("ForestBackground.jpg");
+    imgForest.resize(1600,900);
+    
+    imgCrossHair = loadImage("Crosshair.png");
+    imgCrossHair.resize(50,45);
   }
 
   /**
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-	  
-	// sample code, delete this stuff
-    stroke(128);
-    line(150, 25, 270, 350);  
-
-    stroke(255);
-    line(50, 125, 70, 50);  
+    image(imgBackground, 0, 0);
+	  image(imgCrossHair, mouseX - 25, mouseY - 45/2);
+    rect(600, 350, 400, 75);
+    if(blnMouseClick){
+      levelOne();
+    }
   }
-  
-  // define other methods down here.
+
+  public void levelOne() {
+    image(imgForest, 0, 0);
+  }
+
+  public void mousePressed() {
+    if (mouseX > 600 && mouseX < 1000 && mouseY > 350 && mouseY < 425) {
+      blnMouseClick = true;
+    }
+  }
 }
