@@ -13,8 +13,9 @@ public class Sketch extends PApplet {
   PImage imgCrossHair;
   PImage imgBackground;
   PImage imgSpace;
-  int sheepX = 0;
-  int sheepY = 0;
+  int intSheepX = 100;
+  int intSheepY = 500;
+  float fltSheepSpeed = 2;
   boolean blnMouseClick = false;
 
   /**
@@ -37,6 +38,9 @@ public class Sketch extends PApplet {
     
     imgForest = loadImage("ForestBackground.jpg");
     imgForest.resize(1600,900);
+
+    imgSheep = loadImage("Sheep.png");
+  
     
     imgCrossHair = loadImage("Crosshair.png");
     imgCrossHair.resize(50,45);
@@ -56,9 +60,11 @@ public class Sketch extends PApplet {
 
   public void levelOne() {
     image(imgForest, 0, 0);
-  }
+    image(imgSheep, intSheepX, intSheepY);
+    intSheepX += fltSheepSpeed;
+   }
 
-  public void levelTwo() {
+  public void levelThree() {
     image(imgSpace, 0, 0);
   }
   public void mousePressed() {
