@@ -13,17 +13,21 @@ public class Sketch extends PApplet {
   PImage imgCrossHair;
   PImage imgBackground;
   PImage imgSpace;
-  int intSheepX = 100;
-  int intSheepY = 500;
+  float [] fltSheepX = new float[4];
+  float [] fltSheepY = new float[4];
   float fltSheepSpeed = 2;
   boolean blnMouseClick = false;
+  boolean [] blnSheepAlive = new boolean[4];
+  
+  int randomSheepX = (int) Math.round((Math.random() * 2));
+  int randomSheepY = (int) Math.round((Math.random() * 2));
 
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
 	// put your size call here
-    size(1600, 900);
+    size(1280, 720);
   }
 
   /** 
@@ -37,13 +41,20 @@ public class Sketch extends PApplet {
     imgSpace = loadImage("Space.jpg");
     
     imgForest = loadImage("ForestBackground.jpg");
-    imgForest.resize(1600,900);
+    imgForest.resize(1280,720);
 
     imgSheep = loadImage("Sheep.png");
-  
-    
+    imgSheep.resize(200, 200);
+
     imgCrossHair = loadImage("Crosshair.png");
-    imgCrossHair.resize(50,45);
+    imgCrossHair.resize(40,36);
+
+    for (int i = 0; i < fltSheepY.length; i++) {
+      fltSheepY[i] = random(height);
+    }
+    for (int i = 0; i < fltSheepX.length; i++) {
+      fltSheepX[i] = 0;
+    }
   }
 
   /**
@@ -51,8 +62,7 @@ public class Sketch extends PApplet {
    */
   public void draw() {
     image(imgBackground, 0, 0);
-	  image(imgCrossHair, mouseX - 25, mouseY - 45/2);
-    rect(600, 350, 400, 75);
+    rect(480, 280, 320, 60);
     if(blnMouseClick){
       levelOne();
     }
@@ -60,15 +70,21 @@ public class Sketch extends PApplet {
 
   public void levelOne() {
     image(imgForest, 0, 0);
-    image(imgSheep, intSheepX, intSheepY);
-    intSheepX += fltSheepSpeed;
+    for(int i = 0; i < blnSheepAlive.length; i++){
+      if(!blnSheepAlive[i]){
+        image(imgSheep, fltSheepX[i], fltSheepY[i]);
+        fltSheepX[i] += fltSheepSpeed;
+      }
+    }
+    image(imgCrossHair, mouseX - 25, mouseY - 45/2);
+
    }
 
   public void levelThree() {
     image(imgSpace, 0, 0);
   }
   public void mousePressed() {
-    if (mouseX > 600 && mouseX < 1000 && mouseY > 350 && mouseY < 425) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340) {
       blnMouseClick = true;
     }
   }
