@@ -21,7 +21,6 @@ public class Sketch extends PApplet {
   
   int randomSheepX = (int) Math.round((Math.random() * 2));
   int randomSheepY = (int) Math.round((Math.random() * 2));
-
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -37,20 +36,19 @@ public class Sketch extends PApplet {
   public void setup() {
     frameRate(144);
     imgBackground = loadImage("MenuBackground.jpg");
-
     imgSpace = loadImage("Space.jpg");
-    
     imgForest = loadImage("ForestBackground.jpg");
     imgForest.resize(1280,720);
-
     imgSheep = loadImage("Sheep.png");
-    imgSheep.resize(200, 200);
-
+    imgSheep.resize(150, 150);
     imgCrossHair = loadImage("Crosshair.png");
     imgCrossHair.resize(40,36);
 
     for (int i = 0; i < fltSheepY.length; i++) {
-      fltSheepY[i] = random(height);
+      fltSheepY[i] = (int) Math.round((Math.random() * 200 + 420 ));
+    }
+    for (int i = 0; i < fltSheepX.length; i++) {
+      fltSheepX[i] = 0;
     }
     for (int i = 0; i < fltSheepX.length; i++) {
       fltSheepX[i] = 0;
