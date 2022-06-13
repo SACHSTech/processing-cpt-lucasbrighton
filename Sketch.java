@@ -13,14 +13,11 @@ import processing.core.PImage;
 public class Sketch extends PApplet {
 	// global variables
   PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard;
-  float [] fltSheepX = new float[3];
-  float [] fltSheepY = new float[3];
+  float [] fltSheepX = new float[3], fltSheepY = new float[3];
   float fltSheepSpeed = 3;
-  boolean blnMouseClick = false;
   boolean [] blnInverse = new boolean[3];
-  boolean time = false;
-  int randomSheepX;
-  int points = 0;
+  boolean time = false, start = false, blnMouseClick = false;
+  int randomSheepX, points = 0;
   long lngStartTime, lngElapsedTime;
 
   /**
@@ -88,7 +85,13 @@ public class Sketch extends PApplet {
     if(!time){
         lngStartTime = System.currentTimeMillis();
         time = true;
-      }
+    }
+
+    else if(start){
+      lngStartTime = System.currentTimeMillis();
+      start = false;
+    }
+
     image(imgForest, 0, 0);
     for(int i = 0; i < fltSheepX.length; i++){
       if(!blnInverse[i]){
@@ -115,10 +118,11 @@ public class Sketch extends PApplet {
     textSize(50);
     text("Time: " + (int)lngElapsedTime, 530, 100);
     text("Points: " + points, 530, 170);
-    if(lngElapsedTime >= 5){
+    if(lngElapsedTime >= 60){
       blnMouseClick = false;
       points = 0;
       lngElapsedTime = 0;
+      start = true;
       return;
     }
   }
