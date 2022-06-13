@@ -1,5 +1,6 @@
 import processing.core.PApplet;
 import processing.core.PImage; 
+
 /**
  * Description: 
  * @author: B. Zhang & L. Pei
@@ -10,10 +11,13 @@ public class Sketch extends PApplet {
   PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep;
   float [] fltSheepX = new float[3];
   float [] fltSheepY = new float[3];
-  float fltSheepSpeed = 4;
+  float fltSheepSpeed = 3;
   boolean blnMouseClick = false;
   boolean [] blnInverse = new boolean[3];
   int randomSheepX;
+  int points = 0;
+  long lngStartTime, lngElapsedTime;
+
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -59,6 +63,7 @@ public class Sketch extends PApplet {
         }
       }
     }
+    lngStartTime = System.currentTimeMillis();
   }
 
   /**
@@ -92,8 +97,14 @@ public class Sketch extends PApplet {
         }
       }
     }
-
     image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
+    lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
+    fill(0);
+    textSize(50);
+    text("Time: " + (int)lngElapsedTime, 570, 100);
+    text("Points: " + points, 570, 170);
+    //if(lngElapsedTime >= 5){
+    //}
   }
 
   public void levelThree() {
@@ -109,11 +120,13 @@ public class Sketch extends PApplet {
       if (dist(mouseX, mouseY, fltSheepX[i] + 97, fltSheepY[i] + 72) < 25 && blnInverse[i]) {
         fltSheepX[i] = 1430;
         fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
+        points++;
       }
       // regular
       if (dist(mouseX, mouseY, fltSheepX[i] + 55, fltSheepY[i] + 70) < 25 && !blnInverse[i]) {
         fltSheepX[i] = -300;
         fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
+        points++;
       }
     } 
   }
