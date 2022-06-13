@@ -1,3 +1,7 @@
+/*Notes:
+ * Create a start level boolean to check state of the user.
+ */
+
 import processing.core.PApplet;
 import processing.core.PImage; 
 
@@ -8,12 +12,13 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard;
   float [] fltSheepX = new float[3];
   float [] fltSheepY = new float[3];
   float fltSheepSpeed = 3;
   boolean blnMouseClick = false;
   boolean [] blnInverse = new boolean[3];
+  boolean time = false;
   int randomSheepX;
   int points = 0;
   long lngStartTime, lngElapsedTime;
@@ -44,6 +49,8 @@ public class Sketch extends PApplet {
     imgCrossHair.resize(40,36);
     imgTarget = loadImage("Target.png");
     imgTarget.resize(110,62);
+    imgScoreboard = loadImage("Scoreboard.png");
+    imgScoreboard.resize(400, 250);
 
     for (int i = 0; i < fltSheepX.length; i++) {
       randomSheepX = (int) Math.round((Math.random() + 1));
@@ -63,7 +70,6 @@ public class Sketch extends PApplet {
         }
       }
     }
-    lngStartTime = System.currentTimeMillis();
   }
 
   /**
@@ -71,6 +77,7 @@ public class Sketch extends PApplet {
    */
   public void draw() {
     image(imgBackground, 0, 0);
+    fill(255);
     rect(480, 280, 320, 60);
     if(blnMouseClick){
       levelOne();
@@ -78,6 +85,10 @@ public class Sketch extends PApplet {
   }
 
   public void levelOne() {
+    if(!time){
+        lngStartTime = System.currentTimeMillis();
+        time = true;
+      }
     image(imgForest, 0, 0);
     for(int i = 0; i < fltSheepX.length; i++){
       if(!blnInverse[i]){
@@ -99,12 +110,17 @@ public class Sketch extends PApplet {
     }
     image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
     lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
+    image(imgScoreboard, 440, 0);
     fill(0);
     textSize(50);
-    text("Time: " + (int)lngElapsedTime, 570, 100);
-    text("Points: " + points, 570, 170);
-    //if(lngElapsedTime >= 5){
-    //}
+    text("Time: " + (int)lngElapsedTime, 530, 100);
+    text("Points: " + points, 530, 170);
+    if(lngElapsedTime >= 5){
+      blnMouseClick = false;
+      points = 0;
+      lngElapsedTime = 0;
+      return;
+    }
   }
 
   public void levelThree() {
