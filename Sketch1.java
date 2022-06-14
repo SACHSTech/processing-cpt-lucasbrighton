@@ -48,10 +48,10 @@ public class Sketch1 extends PApplet {
     imgCrossHair.resize(40,36);
     imgTarget = loadImage("Target.png");
     imgTarget.resize(110,62);
-    imgWhiteTarget = loadImage("WhiteTarget.png");
-    imgWhiteTarget.resize(180,102);
     imgScoreboard = loadImage("Scoreboard.png");
     imgScoreboard.resize(400, 250);
+    imgWhiteTarget = loadImage("WhiteTarget.png");
+    imgWhiteTarget.resize(180,101);
 
     // Level One Assets
     imgForest = loadImage("ForestBackground.jpg");
@@ -286,10 +286,11 @@ public class Sketch1 extends PApplet {
 
       for (int i = 0; i < fltAlienX.length; i++){
         image(imgAlien, fltAlienX[i], fltAlienY[i]);
-        image(imgWhiteTarget, fltAlienX[i] - 8.8f, fltAlienY[i] + 6.5f);
-
+        
         fltAlienX[i] = fltAlienX[i] + intAlienSpeedX[i];
         fltAlienY[i] = fltAlienY[i] + intAlienSpeedY[i];
+
+        image(imgWhiteTarget, fltAlienX[i] - 10f, fltAlienY[i] + 7.5f);
 
         if (fltAlienX[i] < -20 || fltAlienX[i] > width - 150) {
           intAlienSpeedX[i] *= -1;
