@@ -256,64 +256,64 @@ public class Sketch1 extends PApplet {
   }
 
   public void levelThree() {
-
-  image(imgSpace, 0, 0);
-  if(!blnTime){
-      lngStartTime = System.currentTimeMillis();
-      blnTime = true;
-  }
-
-  else if(blnStart){
-    lngStartTime = System.currentTimeMillis();
-    blnStart = false;
-  }
-
-  if(blnMouseClicked){
-    fltTotalShots++;
-    blnMouseClicked = false;
-  }
-
-  if(!blnEnd){
-    for (int i = 0; i < fltAlienX.length; i++){
-      image(imgAlien, fltAlienX[i], fltAlienY[i]);
-      
-      fltAlienX[i] = fltAlienX[i] + intAlienSpeedX[i];
-      fltAlienY[i] = fltAlienY[i] + intAlienSpeedY[i];
-
-      if (fltAlienX[i] < -20 || fltAlienX[i] > width - 150) {
-        intAlienSpeedX[i] *= -1;
-      }
-      if (fltAlienY[i] < -20 || fltAlienY[i] > height - 150) {
-        intAlienSpeedY[i] *= -1;
-      }
+    image(imgSpace, 0, 0);
+    if(!blnTime){
+        lngStartTime = System.currentTimeMillis();
+        blnTime = true;
     }
-    image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
-    lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
-    imgScoreboard.resize(400, 250);
-    image(imgScoreboard, 440, 0);
-    fill(255);
-    textSize(50);
-    text("Time: " + (int) lngElapsedTime, 530, 100);
-    text("Points: " + (int) fltPoints, 530, 170);
+
+    else if(blnStart){
+      lngStartTime = System.currentTimeMillis();
+      blnStart = false;
+    }
+
+    if(blnMouseClicked){
+      fltTotalShots++;
+      blnMouseClicked = false;
+    }
+
+    if(!blnEnd){
+      for (int i = 0; i < fltAlienX.length; i++){
+        image(imgAlien, fltAlienX[i], fltAlienY[i]);
+        
+        fltAlienX[i] = fltAlienX[i] + intAlienSpeedX[i];
+        fltAlienY[i] = fltAlienY[i] + intAlienSpeedY[i];
+
+        if (fltAlienX[i] < -20 || fltAlienX[i] > width - 150) {
+          intAlienSpeedX[i] *= -1;
+        }
+        if (fltAlienY[i] < -20 || fltAlienY[i] > height - 150) {
+          intAlienSpeedY[i] *= -1;
+        }
+      }
+      image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
+      lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
+      imgScoreboard.resize(400, 250);
+      image(imgScoreboard, 440, 0);
+      fill(255);
+      textSize(50);
+      text("Time: " + (int) lngElapsedTime, 530, 100);
+      text("Points: " + (int) fltPoints, 530, 170);
+    }
+    
+    if(lngElapsedTime >= 10){
+      blnStart = true;
+      blnEnd = true;
+      imgScoreboard.resize(640, 500);
+      image(imgScoreboard, 320, 110);
+      fill(255);
+      textSize(50);
+      text("Stage Complete", 470, 210);
+      text("Score: " + (int) fltPoints, 390, 280);
+      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
+      fill(255);
+      rect(490, 470, 300, 60);
+      fill(0);
+      text("Back", 575, 520);
+    }
+      image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);   
   }
-  
-  if(lngElapsedTime >= 10){
-    blnStart = true;
-    blnEnd = true;
-    imgScoreboard.resize(640, 500);
-    image(imgScoreboard, 320, 110);
-    fill(255);
-    textSize(50);
-    text("Stage Complete", 470, 210);
-    text("Score: " + (int) fltPoints, 390, 280);
-    text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
-    fill(255);
-    rect(490, 470, 300, 60);
-    fill(0);
-    text("Back", 575, 520);
-  }
-    image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);   
-}
+
   public void mousePressed() {
     if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340 && (!blnStageThreeClicked && !blnStageTwoClicked)) {
       blnStageOneClicked = true;
@@ -351,6 +351,9 @@ public class Sketch1 extends PApplet {
         }
         else if(blnStageTwoClicked){
           blnStageTwoClicked = false;
+        }
+        else if(blnStageThreeClicked){
+          blnStageThreeClicked = false;
         }
         blnEnd = false;
         fltPoints = 0;
