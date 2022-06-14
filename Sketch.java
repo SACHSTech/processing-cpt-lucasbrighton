@@ -2,6 +2,7 @@
  * Add an arraylist to keep track of high scores
  * Add escape key for pausing in game and returning to menu
  * Continue finishing other two stages
+ * Finish menu
  */
 
 import processing.core.PApplet;
@@ -129,7 +130,7 @@ public class Sketch extends PApplet {
       text("Points: " + (int) fltPoints, 530, 170);
     }
     
-    if(lngElapsedTime >= 60){
+    if(lngElapsedTime >= 10){
       blnStart = true;
       blnEnd = true;
       imgScoreboard.resize(640, 500);
@@ -179,6 +180,7 @@ public class Sketch extends PApplet {
         blnStageOneClicked = false;
         blnEnd = false;
         fltPoints = 0;
+        fltTotalShots = 0;
       }
     }
   }
