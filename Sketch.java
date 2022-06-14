@@ -171,7 +171,7 @@ public class Sketch extends PApplet {
     if(blnStageOneClicked && !blnEnd){
       blnMouseClicked = true;
     }
-
+ 
     //back button
     if(blnEnd){
       if (mouseX > 490 && mouseX < 790 && mouseY > 470 && mouseY < 530) {
