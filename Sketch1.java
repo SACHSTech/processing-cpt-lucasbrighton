@@ -5,6 +5,7 @@
  * Finish menu
  */
 
+import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PImage; 
 
@@ -15,16 +16,18 @@ import processing.core.PImage;
 
 public class Sketch1 extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgAlien;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgOcean, imgAlien;
   float [] fltSheepX = new float[3], fltSheepY = new float[3];
-  float [] fltAlienX = new float[3], fltAlienY = new float[3];
   float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0;
   boolean [] blnInverse = new boolean[3];
-  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnMouseClicked, blnLevelOneBack = false, blnStageThreeClicked = false;
+  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnStageThreeClicked = false, blnMouseClicked;
   int intRandomSheepX;
-  float [] intAlienSpeedX = new float[3], intAlienSpeedY = new float[3];
-  int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
   long lngStartTime, lngElapsedTime;
+  ArrayList<Integer> intHighScores = new ArrayList<Integer>();
+  float [] intAlienSpeedX = new float[3], intAlienSpeedY = new float[3];
+  float [] fltAlienX = new float[3], fltAlienY = new float[3];
+  int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
+
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -39,21 +42,29 @@ public class Sketch1 extends PApplet {
    */
   public void setup() {
     frameRate(144);
+    // Menu and Universal Assets
     imgBackground = loadImage("MenuBackground.jpg");
-    imgSpace = loadImage("Space.jpg");
-    imgSpace.resize(width, height);
-    imgForest = loadImage("ForestBackground.jpg");
-    imgForest.resize(1280,720);
-    imgSheep = loadImage("Sheep.png");
-    imgSheep.resize(150, 150);
-    imgInverseSheep = loadImage("InverseSheep.png");
-    imgInverseSheep.resize(150, 150);
     imgCrossHair = loadImage("Crosshair.png");
     imgCrossHair.resize(40,36);
     imgTarget = loadImage("Target.png");
     imgTarget.resize(110,62);
     imgScoreboard = loadImage("Scoreboard.png");
     imgScoreboard.resize(400, 250);
+
+    // Level One Assets
+    imgForest = loadImage("ForestBackground.jpg");
+    imgForest.resize(1280,720);
+    imgSheep = loadImage("Sheep.png");
+    imgSheep.resize(150, 150);
+    imgInverseSheep = loadImage("InverseSheep.png");
+    imgInverseSheep.resize(150, 150);
+
+    // Level Two Assets
+    imgOcean = loadImage("OceanBackground.png");
+    imgOcean.resize(1280, 720);
+
+    //Level Three Assets
+    imgSpace = loadImage("Space.jpg");
     imgAlien = loadImage("Alien.png");
     imgAlien.resize(150, 146);
 
@@ -75,7 +86,6 @@ public class Sketch1 extends PApplet {
         }
       }
     }
-    
     for (int i = 0; i < fltAlienX.length; i++){
       fltAlienX[i] = random(160, width - 160);
       fltAlienY[i] = random(160, height - 160);
@@ -85,8 +95,8 @@ public class Sketch1 extends PApplet {
       fltAlienX[i] = random(160, height - 160);
     }
     for (int i = 0; i < intAlienSpeedX.length; i++){
-      intAlienSpeedX[i] = random(3, 7);
-      intAlienSpeedY[i] = random(3, 7);
+      intAlienSpeedX[i] = random(3, 6);
+      intAlienSpeedY[i] = random(3, 6);
       intUpOrDown[i] = (int)Math.round((Math.random() + 1));
       intLeftOrRight[i] = (int)Math.round((Math.random() + 1));
 
@@ -105,13 +115,14 @@ public class Sketch1 extends PApplet {
   public void draw() {
     image(imgBackground, 0, 0);
     fill(255);
-    rect(480, 250, 320, 60);
-    rect(480, 450, 320, 60);
-
-    
-    // call lvl 1
+    rect(480, 280, 320, 60);
+    rect(480, 360, 320, 60);
+    rect(480, 440, 320, 60);
     if(blnStageOneClicked){
       levelOne();
+    }
+    if(blnStageTwoClicked){
+      levelTwo();
     }
     if(blnStageThreeClicked){
       levelThree();
@@ -173,7 +184,70 @@ public class Sketch1 extends PApplet {
       textSize(50);
       text("Stage Complete", 470, 210);
       text("Score: " + (int) fltPoints, 390, 280);
-      text("Accuracy: " + (int)(fltPoints / (fltTotalShots - 1) * 100) + "%", 390, 350);
+      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
+      fill(255);
+      rect(490, 470, 300, 60);
+      fill(0);
+      text("Back", 575, 520);
+    }
+  }
+
+  public void levelTwo() {
+    image(imgOcean, 0, 0);
+    if(!blnTime){
+      lngStartTime = System.currentTimeMillis();
+      blnTime = true;
+    }
+
+    else if(blnStart){
+      lngStartTime = System.currentTimeMillis();
+      blnStart = false;
+    }
+
+    if(blnMouseClicked){
+      fltTotalShots++;
+      blnMouseClicked = false;
+    }
+
+    if(!blnEnd){
+      for(int i = 0; i < fltSheepX.length; i++){
+        if(!blnInverse[i]){
+          image(imgSheep, fltSheepX[i], fltSheepY[i]);
+          image(imgTarget, fltSheepX[i], fltSheepY[i] + 42);
+          fltSheepX[i] += fltSheepSpeed;
+          if(fltSheepX[i] > 1150){
+            blnInverse[i] = true;
+          }
+        }
+        else if(blnInverse[i]){
+          image(imgInverseSheep, fltSheepX[i], fltSheepY[i]);
+          image(imgTarget, fltSheepX[i] + 42, fltSheepY[i] + 42);
+          fltSheepX[i] -= fltSheepSpeed;
+          if(fltSheepX[i] < 0){
+            blnInverse[i] = false;
+          }
+        }
+      }
+      image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
+      lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
+      imgScoreboard.resize(400, 250);
+      image(imgScoreboard, 440, 0);
+      fill(255);
+      textSize(50);
+      text("Time: " + (int) lngElapsedTime, 530, 100);
+      text("Points: " + (int) fltPoints, 530, 170);
+    }
+
+    if(lngElapsedTime >= 10){
+      blnStart = true;
+      blnEnd = true;
+      imgScoreboard.resize(640, 500);
+      image(imgScoreboard, 320, 110);
+      fill(255);
+      textSize(50);
+      text("Stage Complete", 470, 210);
+      text("Score: " + (int) fltPoints, 390, 280);
+      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
       fill(255);
       rect(490, 470, 300, 60);
       fill(0);
@@ -182,8 +256,24 @@ public class Sketch1 extends PApplet {
   }
 
   public void levelThree() {
-    image(imgSpace, 0, 0);
 
+  image(imgSpace, 0, 0);
+  if(!blnTime){
+      lngStartTime = System.currentTimeMillis();
+      blnTime = true;
+  }
+
+  else if(blnStart){
+    lngStartTime = System.currentTimeMillis();
+    blnStart = false;
+  }
+
+  if(blnMouseClicked){
+    fltTotalShots++;
+    blnMouseClicked = false;
+  }
+
+  if(!blnEnd){
     for (int i = 0; i < fltAlienX.length; i++){
       image(imgAlien, fltAlienX[i], fltAlienY[i]);
       
@@ -197,13 +287,41 @@ public class Sketch1 extends PApplet {
         intAlienSpeedY[i] *= -1;
       }
     }
+    image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
+    lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
+    imgScoreboard.resize(400, 250);
+    image(imgScoreboard, 440, 0);
+    fill(255);
+    textSize(50);
+    text("Time: " + (int) lngElapsedTime, 530, 100);
+    text("Points: " + (int) fltPoints, 530, 170);
   }
-
+  
+  if(lngElapsedTime >= 10){
+    blnStart = true;
+    blnEnd = true;
+    imgScoreboard.resize(640, 500);
+    image(imgScoreboard, 320, 110);
+    fill(255);
+    textSize(50);
+    text("Stage Complete", 470, 210);
+    text("Score: " + (int) fltPoints, 390, 280);
+    text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
+    fill(255);
+    rect(490, 470, 300, 60);
+    fill(0);
+    text("Back", 575, 520);
+  }
+    image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);   
+}
   public void mousePressed() {
-    if (mouseX > 480 && mouseX < 800 && mouseY > 250 && mouseY < 310 && !blnStageThreeClicked) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340 && (!blnStageThreeClicked && !blnStageTwoClicked)) {
       blnStageOneClicked = true;
     }
-    else if (mouseX > 480 && mouseX < 800 && mouseY > 450 && mouseY < 510 && !blnStageOneClicked) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 360 && mouseY < 420 && (!blnStageThreeClicked && !blnStageOneClicked)) {
+      blnStageTwoClicked = true;
+    }
+    if (mouseX > 480 && mouseX < 800 && mouseY > 440 && mouseY < 500 && (!blnStageTwoClicked && !blnStageOneClicked)) {
       blnStageThreeClicked = true;
     }
     for(int i = 0; i < fltSheepX.length; i++){
@@ -220,19 +338,28 @@ public class Sketch1 extends PApplet {
         fltPoints++;
       }
     }
-    if(blnStageOneClicked && !blnEnd){
+    if((blnStageOneClicked || blnStageTwoClicked || blnStageThreeClicked) && !blnEnd){
       blnMouseClicked = true;
     }
  
-    // back button
+    //back button
     if(blnEnd){
       if (mouseX > 490 && mouseX < 790 && mouseY > 470 && mouseY < 530) {
-        blnLevelOneBack = true;
-        blnStageOneClicked = false;
+        intHighScores.add((int) fltPoints);
+        if(blnStageOneClicked){
+          blnStageOneClicked = false;
+        }
+        else if(blnStageTwoClicked){
+          blnStageTwoClicked = false;
+        }
         blnEnd = false;
         fltPoints = 0;
         fltTotalShots = 0;
       }
     }
+  }
+
+  public float accuracy(float intPoints, float intTotalShots) {
+    return (fltPoints / (fltTotalShots - 1) * 100);
   }
 }
