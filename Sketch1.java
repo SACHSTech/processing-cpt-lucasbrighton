@@ -21,9 +21,10 @@ public class Sketch1 extends PApplet {
   float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0;
   boolean [] blnInverse = new boolean[3];
   boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnMouseClicked, blnLevelOneBack = false, blnStageThreeClicked = false;
-  int intRandomSheepX, intAlienSpeedX = 3;
+  int intRandomSheepX;
+  float [] intAlienSpeedX = new float[3], intAlienSpeedY = new float[3];
+  int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
   long lngStartTime, lngElapsedTime;
-  int intAlienSpeedY = 3;
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -74,9 +75,27 @@ public class Sketch1 extends PApplet {
         }
       }
     }
+    
     for (int i = 0; i < fltAlienX.length; i++){
       fltAlienX[i] = random(160, width - 160);
       fltAlienY[i] = random(160, height - 160);
+    }
+    for (int i = 0; i < fltAlienX.length; i++){
+      fltAlienX[i] = random(0, width - 160);
+      fltAlienX[i] = random(160, height - 160);
+    }
+    for (int i = 0; i < intAlienSpeedX.length; i++){
+      intAlienSpeedX[i] = random(3, 7);
+      intAlienSpeedY[i] = random(3, 7);
+      intUpOrDown[i] = (int)Math.round((Math.random() + 1));
+      intLeftOrRight[i] = (int)Math.round((Math.random() + 1));
+
+      if (intUpOrDown[i] == 2) {
+        intAlienSpeedY[i] *= -1;
+      }
+      if (intLeftOrRight[i] == 2) {
+        intAlienSpeedX[i] *= -1;
+      }
     }
   }
 
@@ -168,23 +187,23 @@ public class Sketch1 extends PApplet {
     for (int i = 0; i < fltAlienX.length; i++){
       image(imgAlien, fltAlienX[i], fltAlienY[i]);
       
-      fltAlienX[i] = fltAlienX[i] + intAlienSpeedX;
-      fltAlienY[i] = fltAlienY[i] + intAlienSpeedY;
+      fltAlienX[i] = fltAlienX[i] + intAlienSpeedX[i];
+      fltAlienY[i] = fltAlienY[i] + intAlienSpeedY[i];
 
-      if (fltAlienX[i] < 0 || fltAlienX[i] > width - 150) {
-        intAlienSpeedX *= -1;
+      if (fltAlienX[i] < -20 || fltAlienX[i] > width - 150) {
+        intAlienSpeedX[i] *= -1;
       }
-      if (fltAlienY[i] < 0 || fltAlienY[i] > height - 150) {
-        intAlienSpeedY *= -1;
+      if (fltAlienY[i] < -20 || fltAlienY[i] > height - 150) {
+        intAlienSpeedY[i] *= -1;
       }
     }
   }
 
   public void mousePressed() {
-    if (mouseX > 480 && mouseX < 800 && mouseY > 250 && mouseY < 310) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 250 && mouseY < 310 && !blnStageThreeClicked) {
       blnStageOneClicked = true;
     }
-    else if (mouseX > 480 && mouseX < 800 && mouseY > 450 && mouseY < 510) {
+    else if (mouseX > 480 && mouseX < 800 && mouseY > 450 && mouseY < 510 && !blnStageOneClicked) {
       blnStageThreeClicked = true;
     }
     for(int i = 0; i < fltSheepX.length; i++){

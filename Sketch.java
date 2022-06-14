@@ -14,16 +14,19 @@ import processing.core.PImage;
  * @author: B. Zhang & L. Pei
  */
 
-public class Sketch2 extends PApplet {
+public class Sketch extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgOcean;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgOcean, imgAlien;
   float [] fltSheepX = new float[3], fltSheepY = new float[3];
   float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0;
   boolean [] blnInverse = new boolean[3];
-  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnMouseClicked;
+  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnStageThreeClicked = false, blnMouseClicked;
   int intRandomSheepX;
   long lngStartTime, lngElapsedTime;
   ArrayList<Integer> intHighScores = new ArrayList<Integer>();
+  float [] intAlienSpeedX = new float[3], intAlienSpeedY = new float[3];
+  float [] fltAlienX = new float[3], fltAlienY = new float[3];
+  int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
 
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -62,6 +65,8 @@ public class Sketch2 extends PApplet {
 
     //Level Three Assets
     imgSpace = loadImage("Space.jpg");
+    imgAlien = loadImage("Alien.png");
+    imgAlien.resize(150, 146);
 
     for (int i = 0; i < fltSheepX.length; i++) {
       intRandomSheepX = (int) Math.round((Math.random() + 1));
@@ -81,6 +86,27 @@ public class Sketch2 extends PApplet {
         }
       }
     }
+    for (int i = 0; i < fltAlienX.length; i++){
+      fltAlienX[i] = random(160, width - 160);
+      fltAlienY[i] = random(160, height - 160);
+    }
+    for (int i = 0; i < fltAlienX.length; i++){
+      fltAlienX[i] = random(0, width - 160);
+      fltAlienX[i] = random(160, height - 160);
+    }
+    for (int i = 0; i < intAlienSpeedX.length; i++){
+      intAlienSpeedX[i] = random(3, 6);
+      intAlienSpeedY[i] = random(3, 6);
+      intUpOrDown[i] = (int)Math.round((Math.random() + 1));
+      intLeftOrRight[i] = (int)Math.round((Math.random() + 1));
+
+      if (intUpOrDown[i] == 2) {
+        intAlienSpeedY[i] *= -1;
+      }
+      if (intLeftOrRight[i] == 2) {
+        intAlienSpeedX[i] *= -1;
+      }
+    }
   }
 
   /**
@@ -91,11 +117,15 @@ public class Sketch2 extends PApplet {
     fill(255);
     rect(480, 280, 320, 60);
     rect(480, 360, 320, 60);
+    rect(480, 440, 320, 60);
     if(blnStageOneClicked){
       levelOne();
     }
     if(blnStageTwoClicked){
       levelTwo();
+    }
+    if(blnStageThreeClicked){
+      levelThree();
     }
   }
 
@@ -224,16 +254,33 @@ public class Sketch2 extends PApplet {
       text("Back", 575, 520);
     }
   }
+
   public void levelThree() {
     image(imgSpace, 0, 0);
-  }
 
+    for (int i = 0; i < fltAlienX.length; i++){
+      image(imgAlien, fltAlienX[i], fltAlienY[i]);
+      
+      fltAlienX[i] = fltAlienX[i] + intAlienSpeedX[i];
+      fltAlienY[i] = fltAlienY[i] + intAlienSpeedY[i];
+
+      if (fltAlienX[i] < -20 || fltAlienX[i] > width - 150) {
+        intAlienSpeedX[i] *= -1;
+      }
+      if (fltAlienY[i] < -20 || fltAlienY[i] > height - 150) {
+        intAlienSpeedY[i] *= -1;
+      }
+    }
+  }
   public void mousePressed() {
-    if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340 && (!blnStageOneClicked && !blnStageTwoClicked)) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340 && (!blnStageThreeClicked && !blnStageTwoClicked)) {
       blnStageOneClicked = true;
     }
-    if (mouseX > 480 && mouseX < 800 && mouseY > 360 && mouseY < 420 && (!blnStageOneClicked && !blnStageTwoClicked)) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 360 && mouseY < 420 && (!blnStageThreeClicked && !blnStageOneClicked)) {
       blnStageTwoClicked = true;
+    }
+    if (mouseX > 480 && mouseX < 800 && mouseY > 440 && mouseY < 500 && (!blnStageTwoClicked && !blnStageOneClicked)) {
+      blnStageThreeClicked = true;
     }
     for(int i = 0; i < fltSheepX.length; i++){
       // inverse
