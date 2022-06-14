@@ -2,6 +2,7 @@
  * Add an arraylist to keep track of high scores
  * Add escape key for pausing in game and returning to menu
  * Continue finishing other two stages
+ * Finish menu
  */
 
 import processing.core.PApplet;
@@ -14,11 +15,11 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgAlien;
   float [] fltSheepX = new float[3], fltSheepY = new float[3];
   float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0;
   boolean [] blnInverse = new boolean[3];
-  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnMouseClicked, blnLevelOneBack = false;
+  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnMouseClicked, blnLevelOneBack = false, blnStageThreeClicked = false;
   int intRandomSheepX;
   long lngStartTime, lngElapsedTime;
 
@@ -38,6 +39,7 @@ public class Sketch extends PApplet {
     frameRate(144);
     imgBackground = loadImage("MenuBackground.jpg");
     imgSpace = loadImage("Space.jpg");
+    imgSpace.resize(width, height);
     imgForest = loadImage("ForestBackground.jpg");
     imgForest.resize(1280,720);
     imgSheep = loadImage("Sheep.png");
@@ -50,6 +52,8 @@ public class Sketch extends PApplet {
     imgTarget.resize(110,62);
     imgScoreboard = loadImage("Scoreboard.png");
     imgScoreboard.resize(400, 250);
+    imgAlien = loadImage("Alien.png");
+    imgAlien.resize(150, 146);
 
     for (int i = 0; i < fltSheepX.length; i++) {
       intRandomSheepX = (int) Math.round((Math.random() + 1));
@@ -77,9 +81,15 @@ public class Sketch extends PApplet {
   public void draw() {
     image(imgBackground, 0, 0);
     fill(255);
-    rect(480, 280, 320, 60);
+    rect(480, 250, 320, 60);
+
+    
+    // call lvl 1
     if(blnStageOneClicked){
       levelOne();
+    }
+    if(blnStageThreeClicked){
+
     }
   }
 
@@ -129,7 +139,7 @@ public class Sketch extends PApplet {
       text("Points: " + (int) fltPoints, 530, 170);
     }
     
-    if(lngElapsedTime >= 60){
+    if(lngElapsedTime >= 10){
       blnStart = true;
       blnEnd = true;
       imgScoreboard.resize(640, 500);
@@ -151,7 +161,7 @@ public class Sketch extends PApplet {
   }
 
   public void mousePressed() {
-    if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 250 && mouseY < 310) {
       blnStageOneClicked = true;
     }
     for(int i = 0; i < fltSheepX.length; i++){
@@ -172,13 +182,14 @@ public class Sketch extends PApplet {
       blnMouseClicked = true;
     }
  
-    //back button
+    // back button
     if(blnEnd){
       if (mouseX > 490 && mouseX < 790 && mouseY > 470 && mouseY < 530) {
         blnLevelOneBack = true;
         blnStageOneClicked = false;
         blnEnd = false;
         fltPoints = 0;
+        fltTotalShots = 0;
       }
     }
   }
