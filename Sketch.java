@@ -16,13 +16,15 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgOcean, imgAlien, imgWhiteTarget;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgOcean, imgAlien, imgWhiteTarget, imgDuck, imgInverseDuck;
   float [] fltSheepX = new float[3], fltSheepY = new float[3];
   float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
+  float [] fltDuckX = new float[3], fltDuckY = new float[3];
+  float fltDuckSpeed = 3;
   float [] intAlienSpeedX = new float[3], intAlienSpeedY = new float[3], fltAlienX = new float[3], fltAlienY = new float[3];
   boolean [] blnInverse = new boolean[3];
-  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnStageThreeClicked = false, blnHighScore = false, blnMouseClicked;
-  int intRandomSheepX, intHolder, intAccuracyHolder;
+  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnStageThreeClicked = false, blnHighScore = false, blnMouseClicked, blnSin1, blnSin2;
+  int intRandomX, intHolder, intAccuracyHolder;
   long lngStartTime, lngElapsedTime;
   ArrayList<Integer> intHighScores = new ArrayList<Integer>(), intAccuracy = new ArrayList<Integer>();
   int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
@@ -63,6 +65,8 @@ public class Sketch extends PApplet {
     // Level Two Assets
     imgOcean = loadImage("OceanBackground.png");
     imgOcean.resize(1280, 720);
+    imgDuck = loadImage("Duck.png");
+    imgDuck.resize(150, 143);
 
     //Level Three Assets
     imgSpace = loadImage("Space.jpg");
@@ -70,20 +74,32 @@ public class Sketch extends PApplet {
     imgAlien.resize(150, 146);
 
     for (int i = 0; i < fltSheepX.length; i++) {
-      intRandomSheepX = (int) Math.round((Math.random() + 1));
-      if(intRandomSheepX == 1){
+      intRandomX = (int) Math.round((Math.random() + 1));
+      if(intRandomX == 1){
         fltSheepX[i] = -200;
         fltSheepY[i] = 500;
+        fltDuckX[i] = -200;
+        fltDuckY[i] = 500;
         if(i >= 1){
           fltSheepY[i] = 600;
+          blnSin2 = true;
+        }
+        else{
+          blnSin1 = true;
         }
       }
-      else if(intRandomSheepX == 2){
+      else if(intRandomX == 2){
         fltSheepX[i] = 1280;
         fltSheepY[i] = 400;
+        fltDuckX[i] = 1280;
+        fltDuckY[i] = 400;
         blnInverse[i] = true;
         if(i >= 1){
           fltSheepY[i] = 600;
+          blnSin2 = true;
+        }
+        else{
+          blnSin1 = true;
         }
       }
     }
@@ -215,10 +231,10 @@ public class Sketch extends PApplet {
     }
 
     if(!blnEnd){
-      for(int i = 0; i < fltSheepX.length; i++){
+      for(int i = 0; i < fltDuckX.length; i++){
         if(!blnInverse[i]){
-          image(imgSheep, fltSheepX[i], fltSheepY[i]);
-          image(imgTarget, fltSheepX[i], fltSheepY[i] + 42);
+          image(imgDuck, fltDuckX[i], fltDuckY[i]);
+          image(imgTarget, fltDuckX[i], fltDuckY[i] + 42);
           fltSheepX[i] += fltSheepSpeed;
           if(fltSheepX[i] > 1150){
             blnInverse[i] = true;
@@ -454,7 +470,7 @@ public class Sketch extends PApplet {
     if(fltAccuracy > 100){
       fltAccuracy = 100;
     }
-    
+
     return (fltAccuracy);
   }
 }
