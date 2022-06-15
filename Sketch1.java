@@ -239,8 +239,10 @@ public class Sketch1 extends PApplet {
         }
         else if (blnUfoShot[i]){
           image(imgExplode, fltUfoX[i], fltUfoY[i]);
-          fltUfoX[i] = random(width);
+          fltUfoX[i] = random(width - 151);
           fltUfoY[i] = random(height - 151);
+          fltUfoSpeedX[i] = random(3, 6);
+          fltUfoSpeedY[i] = random(3, 6);
           blnUfoShot[i] = false;
         }
       }
