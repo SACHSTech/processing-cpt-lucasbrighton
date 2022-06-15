@@ -16,16 +16,15 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode, imgTombstone, imgLogo;
-  float [] fltSheepX = new float[3], fltSheepY = new float[3];
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode, imgLogo;
+  float [] fltSheepX = new float[3], fltSheepY = new float[3], fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   float fltSheepSpeed = 5, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
-  float [] fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   boolean [] blnInverse = new boolean[3], blnUfoShot = new boolean[3];
   boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnHighScore = false, blnMouseClicked, blnBackSpace = false;
   int intRandomSheepX, intHolder, intAccuracyHolder, intRandomUfo, x = 0;
+  int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
   long lngStartTime, lngElapsedTime;
   ArrayList<Integer> intHighScores = new ArrayList<Integer>(), intAccuracy = new ArrayList<Integer>();
-  int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
 
 
   /**
@@ -41,6 +40,7 @@ public class Sketch extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
+    // Framerate is set to 144 fps
     frameRate(144);
     // Menu and Universal Assets
     imgBackground = loadImage("MenuBackground.jpg");
@@ -60,8 +60,6 @@ public class Sketch extends PApplet {
     imgSheep.resize(150, 150);
     imgInverseSheep = loadImage("InverseSheep.png");
     imgInverseSheep.resize(150, 150);
-    imgTombstone = loadImage("Tombstone.png");
-    imgTombstone.resize(150, 150);
 
     // Level Two Assets
     imgOcean = loadImage("OceanBackground.png");
@@ -74,6 +72,7 @@ public class Sketch extends PApplet {
     imgExplode = loadImage("Explosion.png");
     imgExplode.resize(150, 144);
 
+    // For loop to generate starting locations for sheep
     for (int i = 0; i < fltSheepX.length; i++) {
       intRandomSheepX = (int) Math.round((Math.random() + 1));
       if(intRandomSheepX == 1){
@@ -92,6 +91,8 @@ public class Sketch extends PApplet {
         }
       }
     }
+
+    // For loop to generate random starting locations and speeds for ufo
     for (int i = 0; i < fltUfoX.length; i++){
       fltUfoX[i] = random(160, width - 160);
       fltUfoY[i] = random(160, height - 160);
@@ -120,19 +121,21 @@ public class Sketch extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+    // Menu display
     image(imgBackground, 0, 0);
     image(imgLogo, 540, 45);
     fill(255);
     rect(480, 280, 320, 60);
     rect(480, 360, 320, 60);
     rect(480, 440, 320, 60);
-    
     textSize(30);
     text("FPS Game", 565, 255);
     fill(0);
     text("Level 1: Forest", 540, 320);
     text("Level 2: Space", 540, 400);
     text("Leaderboard", 553, 480);
+
+    // Conditional statements to run the following methods
     if(blnStageOneClicked){
       stageOne();
     }
@@ -144,6 +147,9 @@ public class Sketch extends PApplet {
     }
   }
 
+  /**
+   * Level 1 method, runs the entirety of level 1 when called
+   */
   public void stageOne() {
     if(!blnTime){
         lngStartTime = System.currentTimeMillis();
@@ -213,7 +219,9 @@ public class Sketch extends PApplet {
       text("Back", 575, 520);
     }
   }
-
+  /**
+   * Level 2 method, runs level 2 when called
+   */
   public void stageTwo() {
     image(imgSpace2, 0, 0);
     if(!blnTime){
@@ -248,6 +256,7 @@ public class Sketch extends PApplet {
       text("Time: " + (int) lngElapsedTime, 530, 100);
       text("Points: " + (int) fltPoints, 530, 170);
 
+      // draws the ufos at random locations throughout when they are not shot 
       for (int i = 0; i < fltUfoX.length; i++){
         if (!blnUfoShot[i]){
           image(imgUfoWithTarget, fltUfoX[i], fltUfoY[i]);
@@ -255,7 +264,8 @@ public class Sketch extends PApplet {
           fltUfoX[i] = fltUfoX[i] + fltUfoSpeedX[i];
           fltUfoY[i] = fltUfoY[i] + fltUfoSpeedY[i];
           fill(255);
-
+          
+          // edge collision so the ufos don't leave the screen
           if (fltUfoX[i] < -20 || fltUfoX[i] > width - 150) {
             fltUfoSpeedX[i] *= -1;
           }
@@ -263,12 +273,16 @@ public class Sketch extends PApplet {
             fltUfoSpeedY[i] *= -1;
           }
         }
+        // when a ufo is shot, it is hidden and reassigned a new location and speed
         else if (blnUfoShot[i]){
           image(imgExplode, fltUfoX[i], fltUfoY[i]);
+          // random x and y locations
           fltUfoX[i] = random(width - 151);
           fltUfoY[i] = random(height - 151);
+          // random x and y speeds
           fltUfoSpeedX[i] = random(3, 6);
           fltUfoSpeedY[i] = random(3, 6);
+          // sets the array back to false so it can be drawn again
           blnUfoShot[i] = false;
         }
       }
@@ -291,7 +305,7 @@ public class Sketch extends PApplet {
     }
     image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);   
   }
-
+    // Leaderboard method, this method outputs a leaderboard to the screen of the top 5 scores obtained in the game 
   public void highScore() {
     image(imgBackground, 0, 0);
     imgScoreboard.resize(960, 640);
@@ -331,6 +345,7 @@ public class Sketch extends PApplet {
       }
     }
 
+    // back button
     fill(255);
     rect(490, 640, 300, 60);
     fill(0);
@@ -338,7 +353,11 @@ public class Sketch extends PApplet {
     text("Back", 585, 690);
   }
 
+  /** 
+   * user input function for mouse point detection throughout the game
+   */
   public void mousePressed() {
+    // detects if the mouse is clicked within the menu buttons. If it is, then a boolean is set as true for it to be drawn within the draw() method
     if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340 && (!blnStageTwoClicked && !blnHighScore)) {
       blnStageOneClicked = true;
     }
@@ -349,32 +368,39 @@ public class Sketch extends PApplet {
       blnHighScore = true;
     }
 
+    // detects if the mouse is clicked within the targets in level 1
     if(blnStageOneClicked){
       for(int i = 0; i < fltSheepX.length; i++){
-        // inverse
+        // inverse movement
+        // when the sheep is shot, it is moved to the right of the screen and assigned a random Y value
         if (dist(mouseX, mouseY, fltSheepX[i] + 97, fltSheepY[i] + 72) < 25 && blnInverse[i]) {
           fltSheepX[i] = 1430;
           fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
           if(blnStageOneClicked){
-            fltPoints += 100;
-            image(imgTombstone, fltSheepX[i], fltSheepY[i]);
+            // add 100 points for every successful shot in level 1
+            fltPoints += 100; 
           }
         }
         // regular
+        // when the sheep is shot, it is moved to the left of the screen and assigned a random Y value
         if (dist(mouseX, mouseY, fltSheepX[i] + 55, fltSheepY[i] + 70) < 25 && !blnInverse[i]) {
           fltSheepX[i] = -300;
           fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
           if(blnStageOneClicked){
-            fltPoints += 100;
+            // add 100 points for every successful shot in level 1
+            fltPoints += 100; 
           }
         }
       }
     }
-    
+
+    // detects if the mouse is clicked within the targets in level 2
     if(blnStageTwoClicked){
       for (int i = 0; i < fltUfoSpeedX.length; i++){
         if (dist(mouseX, mouseY, fltUfoX[i] + 83.9f, fltUfoY[i] + 78.8f) < 40){
+          // add 200 points for every successful shot in level 2
           fltPoints += 200;
+          // the ufo is marked as shot, and this is used in the stageTwo() method
           blnUfoShot[i] = true;
         }
       }
@@ -384,7 +410,7 @@ public class Sketch extends PApplet {
       blnMouseClicked = true;
     }
  
-    //back button
+    // back button
     if(blnEnd){
       if (mouseX > 490 && mouseX < 790 && mouseY > 470 && mouseY < 530) {
         intHighScores.add((int) fltPoints);
@@ -400,6 +426,7 @@ public class Sketch extends PApplet {
         fltTotalShots = 0;
       }
     }
+
     if(blnHighScore){
       if (mouseX > 490 && mouseX < 790 && mouseY > 640 && mouseY < 700) {
         blnHighScore = false;
@@ -407,28 +434,51 @@ public class Sketch extends PApplet {
     }
   }
 
+    /**
+     * sets a boolean as true when backspace is pressed. this is used to escape a level at any given moment
+     */
   public void keyPressed(){
     if(keyCode == BACKSPACE){
       blnBackSpace = true;
     }
   }
 
+  /**
+   * Resets the variable when backspace is released in order for iut to be used again
+   */
   public void keyReleased(){
     if(keyCode == BACKSPACE){
       blnBackSpace = false;
     }
   }
+
+  /**
+   * Calculates how accurate the player was during each playthrough of a level
+   * 
+   * @param intPoints The amount of points the user scored from playing the level
+   * @param intTotalShots The total amount of shots/clicks the user took during the level
+   * @return Returns the accuracy as a rounded percent value equal or less then 100
+   */
   public float fltAccuracy(float intPoints, float intTotalShots) {
+    // in level 1, each shot is 100 points, so points are converted into hits and then divided by total shots to determine accuracy
     if(blnStageOneClicked){
       fltAccuracy = (fltPoints / 100) / (fltTotalShots - 1) * 100;
     }
+    // in level 1, each shot is 100 points, so points are converted into hits and then divided by total shots to determine accuracy
     else if(blnStageTwoClicked){
       fltAccuracy = (fltPoints / 200) / (fltTotalShots - 1) * 100;
     }
     return (fltCollatCheck(fltAccuracy));
   }
   
+  /**
+   * If a player collats (kills two items in 1 shot), possibly creating accuracy over 100%, this method caps the percentage at 100%
+   * 
+   * @param fltOverHundred The percentage from the fltAccuracy method
+   * @return Returns the final percentage
+   */
   public float fltCollatCheck(float fltOverHundred){
+    // if the accuracy is over 100%, it will be brought down to 100%
     if (fltOverHundred > 100){
       fltOverHundred = 100;
     }
