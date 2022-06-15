@@ -1,16 +1,9 @@
-/*Notes:
- * Add an arraylist to keep track of high scores
- * Add escape key for pausing in game and returning to menu
- * Continue finishing other two stages
- * Finish menu
- */
-
 import java.util.ArrayList;
 import processing.core.PApplet;
 import processing.core.PImage; 
 
 /**
- * Description: 
+ * Description: "LB FPS Shooter game", where the player tries to get the highest possible score.
  * @author: B. Zhang & L. Pei
  */
 
