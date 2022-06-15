@@ -16,12 +16,12 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode, imgTombstone;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode, imgTombstone, imgLogo;
   float [] fltSheepX = new float[3], fltSheepY = new float[3];
   float fltSheepSpeed = 5, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
   float [] fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   boolean [] blnInverse = new boolean[3], blnUfoShot = new boolean[3];
-  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnHighScore = false, blnMouseClicked;
+  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnHighScore = false, blnMouseClicked, blnBackSpace = false;
   int intRandomSheepX, intHolder, intAccuracyHolder, intRandomUfo, x = 0;
   long lngStartTime, lngElapsedTime;
   ArrayList<Integer> intHighScores = new ArrayList<Integer>(), intAccuracy = new ArrayList<Integer>();
@@ -50,6 +50,8 @@ public class Sketch extends PApplet {
     imgTarget.resize(110,62);
     imgScoreboard = loadImage("Scoreboard.png");
     imgScoreboard.resize(400, 250);
+    imgLogo = loadImage("LBLogo.png");
+    imgLogo.resize(200, 200);
 
     // Level One Assets
     imgForest = loadImage("ForestBackground.jpg");
@@ -119,10 +121,18 @@ public class Sketch extends PApplet {
    */
   public void draw() {
     image(imgBackground, 0, 0);
+    image(imgLogo, 540, 45);
     fill(255);
     rect(480, 280, 320, 60);
     rect(480, 360, 320, 60);
     rect(480, 440, 320, 60);
+    
+    textSize(30);
+    text("FPS Game", 565, 255);
+    fill(0);
+    text("Level 1: Forest", 540, 320);
+    text("Level 2: Space", 540, 400);
+    text("Leaderboard", 553, 480);
     if(blnStageOneClicked){
       stageOne();
     }
@@ -148,6 +158,13 @@ public class Sketch extends PApplet {
     if(blnMouseClicked){
       fltTotalShots++;
       blnMouseClicked = false;
+    }
+
+    if(blnBackSpace){
+      blnStageOneClicked = false;
+      fltPoints = 0;
+      fltTotalShots = 0;
+      blnStart = true;
     }
 
     image(imgForest, 0, 0);
@@ -180,7 +197,7 @@ public class Sketch extends PApplet {
       text("Points: " + (int) fltPoints, 530, 170);
     }
     
-    if(lngElapsedTime >= 5){
+    if(lngElapsedTime >= 60){
       blnStart = true;
       blnEnd = true;
       imgScoreboard.resize(640, 500);
@@ -212,6 +229,13 @@ public class Sketch extends PApplet {
     if(blnMouseClicked){
       fltTotalShots++;
       blnMouseClicked = false;
+    }
+
+    if(blnBackSpace){
+      blnStageTwoClicked = false;
+      fltPoints = 0;
+      fltTotalShots = 0;
+      blnStart = true;
     }
 
     if(!blnEnd){
@@ -250,7 +274,7 @@ public class Sketch extends PApplet {
       }
     }
     
-    if(lngElapsedTime >= 10){
+    if(lngElapsedTime >= 60){
       blnStart = true;
       blnEnd = true;
       imgScoreboard.resize(640, 500);
@@ -383,6 +407,17 @@ public class Sketch extends PApplet {
     }
   }
 
+  public void keyPressed(){
+    if(keyCode == BACKSPACE){
+      blnBackSpace = true;
+    }
+  }
+
+  public void keyReleased(){
+    if(keyCode == BACKSPACE){
+      blnBackSpace = false;
+    }
+  }
   public float fltAccuracy(float intPoints, float intTotalShots) {
     if(blnStageOneClicked){
       fltAccuracy = (fltPoints / 100) / (fltTotalShots - 1) * 100;
