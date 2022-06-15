@@ -16,9 +16,9 @@ import processing.core.PImage;
 
 public class Sketch1 extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode, imgTombstone;
   float [] fltSheepX = new float[3], fltSheepY = new float[3];
-  float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
+  float fltSheepSpeed = 5, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
   float [] fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   boolean [] blnInverse = new boolean[3], blnUfoShot = new boolean[3];
   boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnHighScore = false, blnMouseClicked;
@@ -58,6 +58,8 @@ public class Sketch1 extends PApplet {
     imgSheep.resize(150, 150);
     imgInverseSheep = loadImage("InverseSheep.png");
     imgInverseSheep.resize(150, 150);
+    imgTombstone = loadImage("Tombstone.png");
+    imgTombstone.resize(150, 150);
 
     // Level Two Assets
     imgOcean = loadImage("OceanBackground.png");
@@ -121,6 +123,11 @@ public class Sketch1 extends PApplet {
     rect(480, 280, 320, 60);
     rect(480, 360, 320, 60);
     rect(480, 440, 320, 60);
+    fill(0);
+    textSize(30);
+    text("Level 1: Forest", 540, 320);
+    text("Level 2: Space", 540, 400);
+    text("Leaderboard", 553, 480);
     if(blnStageOneClicked){
       stageOne();
     }
@@ -187,7 +194,7 @@ public class Sketch1 extends PApplet {
       textSize(50);
       text("Stage Complete", 470, 210);
       text("Score: " + (int) fltPoints, 390, 280);
-      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
+      text("Accuracy: " + (int) fltAccuracy(fltPoints, fltTotalShots) + "%", 390, 350);
       fill(255);
       rect(490, 470, 300, 60);
       fill(0);
@@ -257,7 +264,7 @@ public class Sketch1 extends PApplet {
       textSize(50);
       text("Stage Complete", 470, 210);
       text("Score: " + (int) fltPoints, 390, 280);
-      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
+      text("Accuracy: " + (int) fltAccuracy(fltPoints, fltTotalShots) + "%", 390, 350);
       fill(255);
       rect(490, 470, 300, 60);
       fill(0);
@@ -331,6 +338,7 @@ public class Sketch1 extends PApplet {
           fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
           if(blnStageOneClicked){
             fltPoints += 100;
+            image(imgTombstone, fltSheepX[i], fltSheepY[i]);
           }
         }
         // regular
@@ -380,16 +388,20 @@ public class Sketch1 extends PApplet {
     }
   }
 
-  public float accuracy(float intPoints, float intTotalShots) {
+  public float fltAccuracy(float intPoints, float intTotalShots) {
     if(blnStageOneClicked){
       fltAccuracy = (fltPoints / 100) / (fltTotalShots - 1) * 100;
     }
     else if(blnStageTwoClicked){
       fltAccuracy = (fltPoints / 200) / (fltTotalShots - 1) * 100;
     }
-    if(fltAccuracy > 100){
-      fltAccuracy = 100;
+    return (fltCollatCheck(fltAccuracy));
+  }
+  
+  public float fltCollatCheck(float fltOverHundred){
+    if (fltOverHundred > 100){
+      fltOverHundred = 100;
     }
-    return (fltAccuracy);
+    return fltOverHundred;
   }
 }
