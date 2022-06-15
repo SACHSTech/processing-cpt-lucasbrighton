@@ -15,7 +15,7 @@ import processing.core.PImage;
  */
 
 public class Sketch extends PApplet {
-	// global variables
+  // global variables
   PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode, imgLogo;
   float [] fltSheepX = new float[3], fltSheepY = new float[3], fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   float fltSheepSpeed = 5, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
@@ -31,7 +31,7 @@ public class Sketch extends PApplet {
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
-	// put your size call here
+    // put your size call here
     size(1280, 720);
   }
 
