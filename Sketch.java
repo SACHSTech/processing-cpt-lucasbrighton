@@ -19,7 +19,6 @@ public class Sketch extends PApplet {
   long lngStartTime, lngElapsedTime;
   ArrayList<Integer> intHighScores = new ArrayList<Integer>(), intAccuracy = new ArrayList<Integer>();
 
-
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
@@ -221,6 +220,7 @@ public class Sketch extends PApplet {
       text("Back", 575, 520);
     }
   }
+  
   /**
    * Level 2 method, runs level 2 when called
    */
