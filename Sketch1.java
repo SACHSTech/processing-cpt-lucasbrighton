@@ -21,8 +21,8 @@ public class Sketch1 extends PApplet {
   float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
   float [] fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   boolean [] blnInverse = new boolean[3], blnUfoShot = new boolean[3];
-  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnStageThreeClicked = false, blnHighScore = false, blnMouseClicked;
-  int intRandomSheepX, intHolder, intAccuracyHolder;
+  boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnHighScore = false, blnMouseClicked;
+  int intRandomSheepX, intHolder, intAccuracyHolder, intRandomUfo;
   long lngStartTime, lngElapsedTime;
   ArrayList<Integer> intHighScores = new ArrayList<Integer>(), intAccuracy = new ArrayList<Integer>();
   int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
@@ -90,10 +90,11 @@ public class Sketch1 extends PApplet {
     for (int i = 0; i < fltUfoX.length; i++){
       fltUfoX[i] = random(160, width - 160);
       fltUfoY[i] = random(160, height - 160);
+      blnUfoShot[i] = false;
     }
     for (int i = 0; i < fltUfoX.length; i++){
       fltUfoX[i] = random(0, width - 160);
-      fltUfoX[i] = random(160, height - 160);
+      fltUfoY[i] = random(160, height - 160);
     }
     for (int i = 0; i < fltUfoSpeedX.length; i++){
       fltUfoSpeedX[i] = random(3, 6);
@@ -119,22 +120,18 @@ public class Sketch1 extends PApplet {
     rect(480, 280, 320, 60);
     rect(480, 360, 320, 60);
     rect(480, 440, 320, 60);
-    rect(480, 520, 320, 60);
     if(blnStageOneClicked){
-      levelOne();
+      stageOne();
     }
     if(blnStageTwoClicked){
-      levelTwo();
-    }
-    if(blnStageThreeClicked){
-      levelThree();
+      stageTwo();
     }
     if(blnHighScore){
       highScore();
     }
   }
 
-  public void levelOne() {
+  public void stageOne() {
     if(!blnTime){
         lngStartTime = System.currentTimeMillis();
         blnTime = true;
@@ -197,70 +194,7 @@ public class Sketch1 extends PApplet {
     }
   }
 
-  public void levelTwo() {
-    image(imgOcean, 0, 0);
-    if(!blnTime){
-      lngStartTime = System.currentTimeMillis();
-      blnTime = true;
-    }
-
-    else if(blnStart){
-      lngStartTime = System.currentTimeMillis();
-      blnStart = false;
-    }
-
-    if(blnMouseClicked){
-      fltTotalShots++;
-      blnMouseClicked = false;
-    }
-
-    if(!blnEnd){
-      for(int i = 0; i < fltSheepX.length; i++){
-        if(!blnInverse[i]){
-          image(imgSheep, fltSheepX[i], fltSheepY[i]);
-          image(imgTarget, fltSheepX[i], fltSheepY[i] + 42);
-          fltSheepX[i] += fltSheepSpeed;
-          if(fltSheepX[i] > 1150){
-            blnInverse[i] = true;
-          }
-        } 
-        else if(blnInverse[i]){
-          image(imgInverseSheep, fltSheepX[i], fltSheepY[i]);
-          image(imgTarget, fltSheepX[i] + 42, fltSheepY[i] + 42);
-          fltSheepX[i] -= fltSheepSpeed;
-          if(fltSheepX[i] < 0){
-            blnInverse[i] = false;
-          }
-        }
-      }
-      image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
-      lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
-      imgScoreboard.resize(400, 250);
-      image(imgScoreboard, 440, 0);
-      fill(255);
-      textSize(50);
-      text("Time: " + (int) lngElapsedTime, 530, 100);
-      text("Points: " + (int) fltPoints, 530, 170);
-    }
-
-    if(lngElapsedTime >= 5){
-      blnStart = true;
-      blnEnd = true;
-      imgScoreboard.resize(640, 500);
-      image(imgScoreboard, 320, 110);
-      fill(255);
-      textSize(50);
-      text("Stage Complete", 470, 210);
-      text("Score: " + (int) fltPoints, 390, 280);
-      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
-      fill(255);
-      rect(490, 470, 300, 60);
-      fill(0);
-      text("Back", 575, 520);
-    }
-  }
-
-  public void levelThree() {
+  public void stageTwo() {
     image(imgSpace2, 0, 0);
     if(!blnTime){
         lngStartTime = System.currentTimeMillis();
@@ -288,11 +222,7 @@ public class Sketch1 extends PApplet {
       text("Points: " + (int) fltPoints, 530, 170);
 
       for (int i = 0; i < fltUfoX.length; i++){
-        if (blnUfoShot[i]){
-          delay(3);
-          blnUfoShot[i] = false;
-       }
-        else{
+        if (!blnUfoShot[i]){
           image(imgUfoWithTarget, fltUfoX[i], fltUfoY[i]);
           
           fltUfoX[i] = fltUfoX[i] + fltUfoSpeedX[i];
@@ -324,7 +254,7 @@ public class Sketch1 extends PApplet {
       fill(0);
       text("Back", 575, 520);
     }
-      image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);   
+    image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);   
   }
 
   public void highScore() {
@@ -374,57 +304,47 @@ public class Sketch1 extends PApplet {
   }
 
   public void mousePressed() {
-    if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340 && (!blnStageThreeClicked && !blnStageTwoClicked)) {
+    if (mouseX > 480 && mouseX < 800 && mouseY > 280 && mouseY < 340 && (!blnStageTwoClicked && !blnHighScore)) {
       blnStageOneClicked = true;
     }
-    if (mouseX > 480 && mouseX < 800 && mouseY > 360 && mouseY < 420 && (!blnStageThreeClicked && !blnStageOneClicked)) {
+    else if (mouseX > 480 && mouseX < 800 && mouseY > 360 && mouseY < 420 && (!blnHighScore && !blnStageOneClicked)) {
       blnStageTwoClicked = true;
     }
-    if (mouseX > 480 && mouseX < 800 && mouseY > 440 && mouseY < 500 && (!blnStageTwoClicked && !blnStageOneClicked)) {
-      blnStageThreeClicked = true;
-    }
-    if (mouseX > 480 && mouseX < 800 && mouseY > 520 && mouseY < 580 && (!blnStageTwoClicked && !blnStageOneClicked && !blnStageThreeClicked)) {
+    else if (mouseX > 480 && mouseX < 800 && mouseY > 440 && mouseY < 500 && (!blnStageTwoClicked && !blnStageOneClicked)) {
       blnHighScore = true;
     }
-    for(int i = 0; i < fltSheepX.length; i++){
-      // inverse
-      if (dist(mouseX, mouseY, fltSheepX[i] + 97, fltSheepY[i] + 72) < 25 && blnInverse[i]) {
-        fltSheepX[i] = 1430;
-        fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
-        if(blnStageOneClicked){
-          fltPoints += 100;
+
+    if(blnStageOneClicked){
+      for(int i = 0; i < fltSheepX.length; i++){
+        // inverse
+        if (dist(mouseX, mouseY, fltSheepX[i] + 97, fltSheepY[i] + 72) < 25 && blnInverse[i]) {
+          fltSheepX[i] = 1430;
+          fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
+          if(blnStageOneClicked){
+            fltPoints += 100;
+          }
         }
-        else if(blnStageTwoClicked){
-          fltPoints += 200;
-        }
-        else if(blnStageThreeClicked){
-          fltPoints += 400;
-        }
-      }
-      // regular
-      if (dist(mouseX, mouseY, fltSheepX[i] + 55, fltSheepY[i] + 70) < 25 && !blnInverse[i]) {
-        fltSheepX[i] = -300;
-        fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
-        if(blnStageOneClicked){
-          fltPoints += 100;
-        }
-        else if(blnStageTwoClicked){
-          fltPoints += 200;
-        }
-        else if(blnStageThreeClicked){
-          fltPoints += 400;
+        // regular
+        if (dist(mouseX, mouseY, fltSheepX[i] + 55, fltSheepY[i] + 70) < 25 && !blnInverse[i]) {
+          fltSheepX[i] = -300;
+          fltSheepY[i] = (int) Math.round((Math.random() * 200 + 400));
+          if(blnStageOneClicked){
+            fltPoints += 100;
+          }
         }
       }
     }
     
-    for (int i = 0; i > fltUfoSpeedX.length; i++){
-      ellipse(fltUfoX[i] + 83.9f, fltUfoY[i] + 78.8f, 80, 80);
-      if (dist(mouseX, mouseY, fltUfoX[i] + 123.9f, fltUfoY[i] + 118.8f) < 40){
-        fltPoints++;
-
+    if(blnStageTwoClicked){
+      for (int i = 0; i < fltUfoSpeedX.length; i++){
+        if (dist(mouseX, mouseY, fltUfoX[i] + 83.9f, fltUfoY[i] + 78.8f) < 40){
+          fltPoints += 200;
+          blnUfoShot[i] = true;
+        }
       }
     }
-    if((blnStageOneClicked || blnStageTwoClicked || blnStageThreeClicked) && !blnEnd){
+
+    if((blnStageOneClicked || blnStageTwoClicked) && !blnEnd){
       blnMouseClicked = true;
     }
  
@@ -438,9 +358,6 @@ public class Sketch1 extends PApplet {
         }
         else if(blnStageTwoClicked){
           blnStageTwoClicked = false;
-        }
-        else if(blnStageThreeClicked){
-          blnStageThreeClicked = false;
         }
         blnEnd = false;
         fltPoints = 0;
@@ -461,8 +378,8 @@ public class Sketch1 extends PApplet {
     else if(blnStageTwoClicked){
       fltAccuracy = (fltPoints / 200) / (fltTotalShots - 1) * 100;
     }
-    else if(blnStageThreeClicked){
-      fltAccuracy = (fltPoints / 400) / (fltTotalShots - 1) * 100;
+    if(fltAccuracy > 100){
+      fltAccuracy = 100;
     }
     return (fltAccuracy);
   }
