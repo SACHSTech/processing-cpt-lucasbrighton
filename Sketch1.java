@@ -16,13 +16,13 @@ import processing.core.PImage;
 
 public class Sketch1 extends PApplet {
 	// global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgSpace, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode;
   float [] fltSheepX = new float[3], fltSheepY = new float[3];
   float fltSheepSpeed = 3, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
   float [] fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   boolean [] blnInverse = new boolean[3], blnUfoShot = new boolean[3];
   boolean blnTime = false, blnStart = false, blnEnd = false, blnStageOneClicked = false, blnStageTwoClicked = false, blnHighScore = false, blnMouseClicked;
-  int intRandomSheepX, intHolder, intAccuracyHolder, intRandomUfo;
+  int intRandomSheepX, intHolder, intAccuracyHolder, intRandomUfo, x = 0;
   long lngStartTime, lngElapsedTime;
   ArrayList<Integer> intHighScores = new ArrayList<Integer>(), intAccuracy = new ArrayList<Integer>();
   int [] intUpOrDown = new int [3], intLeftOrRight = new int[3];
@@ -64,10 +64,11 @@ public class Sketch1 extends PApplet {
     imgOcean.resize(1280, 720);
 
     //Level Three Assets
-    imgSpace = loadImage("Space.jpg");
     imgSpace2 = loadImage("Space2.jpg");
     imgUfoWithTarget = loadImage("UfoWithTarget.png");
     imgUfoWithTarget.resize(150, 150);
+    imgExplode = loadImage("Explosion.png");
+    imgExplode.resize(150, 144);
 
     for (int i = 0; i < fltSheepX.length; i++) {
       intRandomSheepX = (int) Math.round((Math.random() + 1));
@@ -235,6 +236,12 @@ public class Sketch1 extends PApplet {
           if (fltUfoY[i] < -20 || fltUfoY[i] > height - 150) {
             fltUfoSpeedY[i] *= -1;
           }
+        }
+        else if (blnUfoShot[i]){
+          image(imgExplode, fltUfoX[i], fltUfoY[i]);
+          fltUfoX[i] = random(width);
+          fltUfoY[i] = random(height - 151);
+          blnUfoShot[i] = false;
         }
       }
     }
