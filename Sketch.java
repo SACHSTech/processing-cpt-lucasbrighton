@@ -189,7 +189,7 @@ public class Sketch extends PApplet {
       textSize(50);
       text("Stage Complete", 470, 210);
       text("Score: " + (int) fltPoints, 390, 280);
-      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
+      text("Accuracy: " + (int) fltAccuracy(fltPoints, fltTotalShots) + "%", 390, 350);
       fill(255);
       rect(490, 470, 300, 60);
       fill(0);
@@ -259,7 +259,7 @@ public class Sketch extends PApplet {
       textSize(50);
       text("Stage Complete", 470, 210);
       text("Score: " + (int) fltPoints, 390, 280);
-      text("Accuracy: " + (int) accuracy(fltPoints, fltTotalShots) + "%", 390, 350);
+      text("Accuracy: " + (int) fltAccuracy(fltPoints, fltTotalShots) + "%", 390, 350);
       fill(255);
       rect(490, 470, 300, 60);
       fill(0);
@@ -383,16 +383,20 @@ public class Sketch extends PApplet {
     }
   }
 
-  public float accuracy(float intPoints, float intTotalShots) {
+  public float fltAccuracy(float intPoints, float intTotalShots) {
     if(blnStageOneClicked){
       fltAccuracy = (fltPoints / 100) / (fltTotalShots - 1) * 100;
     }
     else if(blnStageTwoClicked){
       fltAccuracy = (fltPoints / 200) / (fltTotalShots - 1) * 100;
     }
-    if(fltAccuracy > 100){
-      fltAccuracy = 100;
+    return (fltCollatCheck(fltAccuracy));
+  }
+  
+  public float fltCollatCheck(float fltOverHundred){
+    if (fltOverHundred > 100){
+      fltOverHundred = 100;
     }
-    return (fltAccuracy);
+    return fltOverHundred;
   }
 }
