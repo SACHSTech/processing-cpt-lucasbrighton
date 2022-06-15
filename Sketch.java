@@ -151,21 +151,25 @@ public class Sketch extends PApplet {
    * Level 1 method, runs the entirety of level 1 when called
    */
   public void stageOne() {
+    // grabs the initial time the level starts at and stores it to the lngStartTime variable
     if(!blnTime){
         lngStartTime = System.currentTimeMillis();
         blnTime = true;
     }
 
+    // uses blnStart to tell the program to grab the starting time again after restarting the level
     else if(blnStart){
       lngStartTime = System.currentTimeMillis();
       blnStart = false;
     }
 
+    // if statement to track amount of shots/clicks taken
     if(blnMouseClicked){
       fltTotalShots++;
       blnMouseClicked = false;
     }
 
+    // blnBackspace used to exit level when true
     if(blnBackSpace){
       blnStageOneClicked = false;
       fltPoints = 0;
@@ -174,8 +178,10 @@ public class Sketch extends PApplet {
     }
 
     image(imgForest, 0, 0);
+    // code below runs if the level has not ended, when blnEnd is false
     if(!blnEnd){
       for(int i = 0; i < fltSheepX.length; i++){
+        // conditional statements to draw inverse and regular sheep
         if(!blnInverse[i]){
           image(imgSheep, fltSheepX[i], fltSheepY[i]);
           image(imgTarget, fltSheepX[i], fltSheepY[i] + 42);
@@ -193,6 +199,8 @@ public class Sketch extends PApplet {
           }
         }
       }
+
+      // crosshair image follows mouse as a reticle
       image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);
       lngElapsedTime = (System.currentTimeMillis() - lngStartTime) / 1000;
       imgScoreboard.resize(400, 250);
@@ -203,6 +211,7 @@ public class Sketch extends PApplet {
       text("Points: " + (int) fltPoints, 530, 170);
     }
     
+    // conditional statement to check if time has passed 60 seconds, responsible for ending the current level
     if(lngElapsedTime >= 60){
       blnStart = true;
       blnEnd = true;
@@ -224,21 +233,26 @@ public class Sketch extends PApplet {
    */
   public void stageTwo() {
     image(imgSpace2, 0, 0);
+
+    // grabs the initial time the level starts at and stores it to the lngStartTime variable
     if(!blnTime){
         lngStartTime = System.currentTimeMillis();
         blnTime = true;
     }
 
+    // uses blnStart to tell the program to grab the starting time again after restarting the level
     else if(blnStart){
       lngStartTime = System.currentTimeMillis();
       blnStart = false;
     }
 
+    // if statement to track amount of shots/clicks taken
     if(blnMouseClicked){
       fltTotalShots++;
       blnMouseClicked = false;
     }
 
+    // blnBackspace used to exit level when true
     if(blnBackSpace){
       blnStageTwoClicked = false;
       fltPoints = 0;
@@ -305,7 +319,8 @@ public class Sketch extends PApplet {
     }
     image(imgCrossHair, mouseX - 20, mouseY - 45/2 + 5);   
   }
-    // Leaderboard method, this method outputs a leaderboard to the screen of the top 5 scores obtained in the game 
+
+  // Leaderboard method, this method outputs a leaderboard to the screen of the top 5 scores obtained in the game 
   public void highScore() {
     image(imgBackground, 0, 0);
     imgScoreboard.resize(960, 640);
@@ -320,7 +335,7 @@ public class Sketch extends PApplet {
       text("#" + (i + 1), 280, 230 + (i * 75));
     }
 
-    // Bubble sorting algorithm
+    // bubble sorting algorithm used to sort scores form largest to smallest
     for (byte byteSize = 0; byteSize < intHighScores.size() ; byteSize++) {
       for (byte byteCompare = 0; byteCompare < intHighScores.size() - byteSize - 1; byteCompare++) {
           if (intHighScores.get(byteCompare) < intHighScores.get(byteCompare + 1)) {
@@ -335,6 +350,7 @@ public class Sketch extends PApplet {
         }
     }
 
+    // nested for loop to output all scores before crashing code due to arraylist boundaries
     for(int i = 0; i < 5; i++){
       if(intHighScores.size() > i){
         text(intHighScores.get(i), 410, 230 + (i * 75));
@@ -413,8 +429,10 @@ public class Sketch extends PApplet {
     // back button
     if(blnEnd){
       if (mouseX > 490 && mouseX < 790 && mouseY > 470 && mouseY < 530) {
+        // .add() function to store accuracy and points for the highScore() method
         intHighScores.add((int) fltPoints);
         intAccuracy.add((int) fltAccuracy);
+        // conditional statements to set booleans false for the current level to stop running
         if(blnStageOneClicked){
           blnStageOneClicked = false;
         }
@@ -428,15 +446,16 @@ public class Sketch extends PApplet {
     }
 
     if(blnHighScore){
+      // edge detection for highscore button
       if (mouseX > 490 && mouseX < 790 && mouseY > 640 && mouseY < 700) {
         blnHighScore = false;
       }
     }
   }
 
-    /**
-     * sets a boolean as true when backspace is pressed. this is used to escape a level at any given moment
-     */
+  /**
+    * sets a boolean as true when backspace is pressed. this is used to escape a level at any given moment
+    */
   public void keyPressed(){
     if(keyCode == BACKSPACE){
       blnBackSpace = true;
@@ -464,7 +483,7 @@ public class Sketch extends PApplet {
     if(blnStageOneClicked){
       fltAccuracy = (fltPoints / 100) / (fltTotalShots - 1) * 100;
     }
-    // in level 1, each shot is 100 points, so points are converted into hits and then divided by total shots to determine accuracy
+    // in level 2, each shot is 200 points, so points are converted into hits and then divided by total shots to determine accuracy
     else if(blnStageTwoClicked){
       fltAccuracy = (fltPoints / 200) / (fltTotalShots - 1) * 100;
     }
@@ -472,7 +491,7 @@ public class Sketch extends PApplet {
   }
   
   /**
-   * If a player collats (kills two items in 1 shot), possibly creating accuracy over 100%, this method caps the percentage at 100%
+   * If a player hits a collateral (kills two items in 1 shot), possibly creating accuracy over 100%, this method caps the percentage at 100%
    * 
    * @param fltOverHundred The percentage from the fltAccuracy method
    * @return Returns the final percentage
