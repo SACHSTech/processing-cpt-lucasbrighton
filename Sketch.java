@@ -451,6 +451,10 @@ public class Sketch extends PApplet {
     else if(blnStageThreeClicked){
       fltAccuracy = (fltPoints / 400) / (fltTotalShots - 1) * 100;
     }
+    if(fltAccuracy > 100){
+      fltAccuracy = 100;
+    }
+    
     return (fltAccuracy);
   }
 }
