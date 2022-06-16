@@ -117,7 +117,7 @@ public class Sketch extends PApplet {
     rect(480, 360, 320, 60);
     rect(480, 440, 320, 60);
     textSize(30);
-    text("FPS Game", 565, 255);
+    text("FPS Shooter", 552, 255);
     fill(0);
     text("Level 1: Forest", 540, 320);
     text("Level 2: Space", 540, 400);
