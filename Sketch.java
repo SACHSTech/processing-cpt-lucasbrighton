@@ -53,7 +53,7 @@ public class Sketch extends PApplet {
     imgInverseSheep = loadImage("InverseSheep.png");
     imgInverseSheep.resize(150, 150);
 
-    //Level Two Assets
+    // Level Two Assets
     imgSpace2 = loadImage("Space2.jpg");
     imgUfoWithTarget = loadImage("UfoWithTarget.png");
     imgUfoWithTarget.resize(150, 150);
@@ -85,10 +85,6 @@ public class Sketch extends PApplet {
       fltUfoX[i] = random(160, width - 160);
       fltUfoY[i] = random(160, height - 160);
       blnUfoShot[i] = false;
-    }
-    for (int i = 0; i < fltUfoX.length; i++){
-      fltUfoX[i] = random(0, width - 160);
-      fltUfoY[i] = random(160, height - 160);
     }
     for (int i = 0; i < fltUfoSpeedX.length; i++){
       fltUfoSpeedX[i] = random(3, 6);
