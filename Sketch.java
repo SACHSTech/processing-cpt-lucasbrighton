@@ -9,7 +9,7 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
   // global variables
-  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgOcean, imgUfoWithTarget, imgSpace2, imgExplode, imgLogo;
+  PImage imgForest, imgSheep, imgTarget, imgCrossHair, imgBackground, imgInverseSheep, imgScoreboard, imgUfoWithTarget, imgSpace2, imgExplode, imgLogo;
   float [] fltSheepX = new float[3], fltSheepY = new float[3], fltUfoSpeedX = new float[3], fltUfoSpeedY = new float[3], fltUfoX = new float[3], fltUfoY = new float[3];
   float fltSheepSpeed = 5, fltPoints = 0, fltTotalShots = 0, fltAccuracy;
   boolean [] blnInverse = new boolean[3], blnUfoShot = new boolean[3];
@@ -53,11 +53,7 @@ public class Sketch extends PApplet {
     imgInverseSheep = loadImage("InverseSheep.png");
     imgInverseSheep.resize(150, 150);
 
-    // Level Two Assets
-    imgOcean = loadImage("OceanBackground.png");
-    imgOcean.resize(1280, 720);
-
-    //Level Three Assets
+    //Level Two Assets
     imgSpace2 = loadImage("Space2.jpg");
     imgUfoWithTarget = loadImage("UfoWithTarget.png");
     imgUfoWithTarget.resize(150, 150);
